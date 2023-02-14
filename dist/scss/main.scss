@@ -1,0 +1,64 @@
+@import './resets';
+@import './variables';
+
+// use function to calculate values
+@function weight($weight-name) {
+	@return map-get($font-weights, $weight-name);
+}
+
+// use mixin to use styles to avoid repetition
+@mixin flexCenter($direction) {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: $direction;
+}
+
+@mixin theme($light-theme: true) { // default value
+	@if $light-theme {
+		background-color: lighten($primary-color, 100%);
+		color: darken($text-color, 100%);
+	}
+}
+
+@mixin mobile {
+	@media (max-width: $mobile) {
+		@content;
+	}
+}
+
+body {
+	background-color: $primary-color;
+	color: $text-color;
+}
+
+.main {
+	@include flexCenter(row); // use include to import mixins
+	width: 80% - 20%; // similar to calc() BUT only works with the same type
+	margin: 0 auto;
+
+	#{&}-paragraph1 {
+		// .main-paragraph
+		font-weight: weight(regular);
+
+		&:hover {
+			color: pink;
+		}
+	}
+
+    #{&}-paragraph2 {
+        @extend .main-paragraph1; // extend means to copy similar css styles
+
+        &:hover {
+            color: $accent-color;
+        }
+    }
+
+	@include mobile {
+		flex-direction: column;
+	}
+}
+
+.light {
+	@include theme(true);
+}
